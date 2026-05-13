@@ -1,0 +1,58 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    container_name: project_app
+    restart: always
+    volumes:
+      - ./:/var/www
+    env_file:
+      - .env
+    networks:
+      - network
+
+  web:
+    image: nginx:alpine
+    container_name: project_nginx
+    restart: always
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    networks:
+      - network
+
+  db:
+    image: mysql:8.0
+    deploy:
+        resources:
+            limits:
+                memory: 512M
+    healthcheck:
+        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}" ]
+    container_name: project_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 3310:3306
+    depends_on:
+      - app
+    volumes:
+      - data:/var/lib/mysql
+    networks:
+      - network
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  network:
+    driver: bridge
