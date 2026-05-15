@@ -19,6 +19,7 @@ class LogController extends Controller
             'values' => data_get($chartData, 'values'),
             'percents' => $logService->getPercentsPopularBrowsers($countRequests),
             'getDataTable' => $logService->getDataTable($countRequests, $request->validated()),
+            'filterOptions' => $logService->getFilterOptions()
         ]);
     }
 }

@@ -11,6 +11,85 @@
     <canvas id="countRequests"></canvas>
     <canvas id="percentagePopularBrowsers"></canvas>
 
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="flex items-center gap-2 mb-4">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+            </svg>
+            <h3 class="text-base font-semibold text-gray-900">Фильтрация данных</h3>
+        </div>
+
+        <form action="{{ url()->current() }}" method="GET"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <!-- Дата От -->
+            <div>
+                <label for="date_from" class="block text-xs font-medium text-gray-600 mb-1.5">Дата от</label>
+                <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm py-2 px-3 border bg-gray-50/50">
+            </div>
+
+            <!-- Дата До -->
+            <div>
+                <label for="date_to" class="block text-xs font-medium text-gray-600 mb-1.5">Дата до (макс. 1
+                    год)</label>
+                <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm py-2 px-3 border bg-gray-50/50">
+            </div>
+
+            <!-- ОС -->
+            <div>
+                <label for="os" class="block text-xs font-medium text-gray-600 mb-1.5">Операционная система</label>
+                <select name="os" id="os"
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm py-2 px-3 border bg-white">
+                    <option value="">Все операционные системы</option>
+                    @foreach($filterOptions['os'] as $os)
+                        <option value="{{ $os }}" {{ request('os') == $os ? 'selected' : '' }}>
+                            {{ $os }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Архитектура -->
+            <div class="">
+                <label for="arch" class="block text-xs font-medium text-gray-600 mb-1.5">Архитектура</label>
+                <select name="arch" id="arch"
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm py-2 px-3 border bg-white">
+                    <option value="">Все</option>
+                    @foreach($filterOptions['architectures'] as $arch)
+                        <option value="{{ $arch }}" {{ request('arch') == $arch ? 'selected' : '' }}>
+                            {{ $arch }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+
+            <div class="">
+                <div class="flex gap-2">
+                    <button type="submit"
+                            class="flex-1 inline-flex justify-center items-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
+                        Применить
+                    </button>
+                    <a href="{{ url()->current() }}"
+                       class="flex-1 inline-flex justify-center items-center rounded-lg bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors">
+                        Сбросить
+                    </a>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- Ошибки валидации дат -->
+        @if($errors->has('date_range'))
+            <div
+                class="mt-3 text-xs bg-red-50 text-red-600 p-2.5 rounded-lg border border-red-200 font-medium flex items-center gap-1.5">
+                <span>⚠️</span> {{ $errors->first('date_range') }}
+            </div>
+        @endif
+    </div>
+
     <div class="overflow-hidden rounded-xl border border-gray-200 shadow-sm bg-white">
         <div class="overflow-x-auto">
             <table class="w-full border-collapse text-left text-sm text-gray-500">

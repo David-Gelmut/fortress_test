@@ -9,6 +9,28 @@ use Illuminate\Support\Facades\DB;
 class LogService
 {
     /**
+     * Получаем cелекты для фильтрации
+     * @return array
+     */
+    public function getFilterOptions(): array
+    {
+       return cache()->remember('log_filters', 86400, function () {
+            $data = Log::query()
+                ->selectRaw('DISTINCT os, architecture')
+                ->where('architecture','!=','')
+                ->whereNotNull('architecture')
+                ->where('os','!=','')
+                ->whereNotNull('os')
+                ->get();
+
+            return [
+                'os' => $data->pluck('os')->unique()->sort()->values()->toArray(),
+                'architectures' => $data->pluck('architecture')->unique()->sort()->values()->toArray(),
+            ];
+        });
+    }
+
+    /**
      * Получаем самые популярные url сгруппированные по дате
      * @return array
      */
@@ -56,6 +78,9 @@ class LogService
     public function getCountRequestsByDate(array $request): Collection
     {
         return Log::query()
+            ->filterByPeriod(data_get($request, 'date_from'), data_get($request, 'date_to'))
+            ->filterByOs(data_get($request, 'os'))
+            ->filterByArch(data_get($request, 'arch'))
             ->select(DB::raw('DATE(date) as log_date, COUNT(*) as log_count'))
             ->groupBy(DB::raw('DATE(date)'))
             ->get();
@@ -161,5 +186,21 @@ class LogService
             ? $sorted->sortByDesc($sortBy)->values()->all()
             : $sorted->sortBy($sortBy)->values()->all();
 
+    }
+
+    public function getSelectOs(): Collection
+    {
+        return Log::query()
+            ->select(DB::raw('os'))
+            ->groupBy(DB::raw('os'))
+            ->get();
+    }
+
+    public function getSelectArch(): Collection
+    {
+        return Log::query()
+            ->select(DB::raw('architecture'))
+            ->groupBy(DB::raw('architecture'))
+            ->get();
     }
 }
