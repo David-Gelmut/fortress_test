@@ -13,9 +13,11 @@ class LogController extends Controller
         $countRequests = $logService->getCountRequestsByDate($request);
         $chartData = $logService->getChartData($countRequests);
 
-        return view('dashboard', ['countRequests' => $countRequests,
+        return view('dashboard', [
+            'countRequests' => $countRequests,
             'labels' => data_get($chartData, 'labels'),
-            'values' => data_get($chartData, 'values')
+            'values' => data_get($chartData, 'values'),
+             'percents' => $logService->getPercentsPopularBrowsers($countRequests),
         ]);
     }
 }

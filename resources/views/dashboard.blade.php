@@ -9,6 +9,7 @@
 <body>
 <div class="flex flex-col w-1/2 m-auto">
     <canvas id="countRequests"></canvas>
+    <canvas id="percentagePopularBrowsers"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -32,6 +33,27 @@
             }
         }
     });
+
+    const ctx1 = document.getElementById('percentagePopularBrowsers');
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: @js($labels),
+            datasets: [{
+                label: 'Процентное соотношение (% от числа запросов) для трех самых популярных браузеров',
+                data: @js($percents),
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
 </script>
 </body>
 </html>
