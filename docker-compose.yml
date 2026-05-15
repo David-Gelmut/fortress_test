@@ -46,6 +46,8 @@ services:
       - app
     volumes:
       - data:/var/lib/mysql
+    env_file:
+      - .env
     networks:
       - network
 
