@@ -10,14 +10,15 @@ class LogController extends Controller
 {
     public function __invoke(LogRequest $request, LogService $logService): View
     {
-        $countRequests = $logService->getCountRequestsByDate($request);
+        $countRequests = $logService->getCountRequestsByDate($request->validated());
         $chartData = $logService->getChartData($countRequests);
 
         return view('dashboard', [
             'countRequests' => $countRequests,
             'labels' => data_get($chartData, 'labels'),
             'values' => data_get($chartData, 'values'),
-             'percents' => $logService->getPercentsPopularBrowsers($countRequests),
+            'percents' => $logService->getPercentsPopularBrowsers($countRequests),
+            'getDataTable' => $logService->getDataTable($countRequests, $request->validated()),
         ]);
     }
 }
