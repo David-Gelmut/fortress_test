@@ -26,9 +26,9 @@ seed:
 env:
 	cp .env.example .env
 ci:
-	docker compose exec -it composer install
+	docker compose exec -it app composer install
 cu:
-	docker compose exec -it composer update
+	docker compose exec -it app composer update
 clear:
 	docker compose exec -it app php artisan optimize:clear
 logs-parse:
