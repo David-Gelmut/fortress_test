@@ -9,7 +9,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-#[Signature('log:parse')]
+#[Signature('log:parse {path}')]
 #[Description('Command description')]
 class ParserLogsCommand extends Command
 {
@@ -19,7 +19,7 @@ class ParserLogsCommand extends Command
 
         $this->info('Начался парсинг логов');
 
-        $filePath = base_path('modimio.access.log');
+        $filePath = base_path($this->argument('path'));
 
         if (!file_exists($filePath)) {
             $this->error("Файл не найден: {$filePath}");
