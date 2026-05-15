@@ -17,7 +17,8 @@
 
 Для первого запуска, нужно выполнить команду
 
-`make env` - добавить в .env данные БД <br>
+`cp .env.example .env` - добавить в .env данные БД <br>
+`php artisan key:generate` - добавить в .env данные БД <br>
 `make init` <br>
 
 Дальнейшие запуски выполняются с помощью 
@@ -29,7 +30,7 @@
 
 Для управления проектом используйте следующие команды:
 
-- `make init` — инициализация проекта (создание .env, установка зависимостей, миграции)
+- `make init` — инициализация проекта (установка зависимостей, миграции)
 - `make up` — запустить приложение
 - `make down` — остановить приложение
 - `make build` — пересобрать Docker-образы
@@ -39,6 +40,10 @@
 ### Для парсинга логов из корня приложения
 - `sudo make logs-parse path=storage/logs/modimio.access.log` 
 - `sudo docker compose exec -it app php artisan log:parse storage/logs/modimio.access.log`
+
+### Меняем права для Linux
+- `sudo chown -R www-data:www-data storage bootstrap/cache`
+- `sudo chmod -R 775 storage bootstrap/cache`
 
 ### Для запуска фронтенда
 - `npm install`

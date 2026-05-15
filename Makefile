@@ -1,6 +1,6 @@
 DEV_FILE=docker-compose.yml
 
-init: up ci key migrate-fresh
+init: up migrate-fresh
 
 up:
 	docker compose -f $(DEV_FILE) up -d
