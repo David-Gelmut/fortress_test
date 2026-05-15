@@ -39,4 +39,9 @@
 ### Для парсинга логов из корня приложения
 - `sudo make logs-parse path=storage/logs/modimio.access.log` 
 - `sudo docker compose exec -it app php artisan log:parse storage/logs/modimio.access.log`
+
+### Для запуска фронтенда
+- `npm install`
+- `npm run dev`
+  
   
