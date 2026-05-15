@@ -18,6 +18,7 @@
 Для первого запуска, нужно выполнить команду
 
 `cp .env.example .env` - добавить в .env данные БД <br>
+`composer install` - добавить в .env данные БД <br>
 `php artisan key:generate` - добавить в .env данные БД <br>
 `make init` <br>
 
